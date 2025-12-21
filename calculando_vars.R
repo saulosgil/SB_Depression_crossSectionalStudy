@@ -272,10 +272,10 @@ todos_dominios <- bind_cols(fis_psi_soc,whoqol_ambiente)
 todos_dominios <-
   todos_dominios |>
   mutate(
-    whoqol_fisico_escore_100   =   round((whoqol_fisico - 4)*(100/16),2),
-    whoqol_psicol_escore_100   =   round((whoqol_psicol - 4)*(100/16),2),
-    whoqol_social_escore_100   =   round((whoqol_social - 4)*(100/16),2),
-    whoqol_ambiente_escore_100 =   round((whoqol_ambiente - 4)*(100/16),2),
+    whoqol_fisico_escore_100 = (whoqol_fisico - 4)*(100/16),
+    whoqol_psicol_escore_100 = (whoqol_psicol - 4)*(100/16),
+    whoqol_social_escore_100 = (whoqol_social - 4)*(100/16),
+    whoqol_ambiente_escore_100 = (whoqol_ambiente - 4)*(100/16)
   )
 
 # Juntando os dominios do WHOQoL com a base e removendo as colunas isoladas

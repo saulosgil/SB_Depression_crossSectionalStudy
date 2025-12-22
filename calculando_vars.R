@@ -287,9 +287,21 @@ df_ajustado <-
          -whoqol_psicol,
          -whoqol_social)
 
+# Calculando IPAC -----------------------------------------------------------------------------
+df_ajustado <-
+  df_ajustado |>
+  mutate(
+    caminhada_10min_minday = (ipac_1a * ipac_1b)/7,
+    atv_moderada_minday = (ipac_2a * ipac_2b)/7,
+    atv_vigorosa_minday = (ipac_3a * ipac_3b)/7,
+    mvpa_minday = atv_moderada_minday + atv_vigorosa_minday,
+    tempo_sentado_minday = ipac_4a,
+    tempo_sentado_fds_minday = ipac_4b
+  ) |>
+  select(-starts_with("ipac"))
 
+
+
+# falta ajustarLASA
 
 glimpse(df_ajustado)
-
-# falta ajustar IPAC E LASA
-

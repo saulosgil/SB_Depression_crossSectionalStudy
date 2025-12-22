@@ -300,8 +300,312 @@ df_ajustado <-
   ) |>
   select(-starts_with("ipac"))
 
+# Calculando LASA -----------------------------------------------------------------------------
+df_ajustado <-
+  df_ajustado |>
+  # separando as tentativas soneca
+  tidyr::separate(
+    col = sbq_1a_1b,
+    c(
+      "soneca_manha_sem_minday",
+      "soneca_tarde_sem_minday",
+      "soneca_noite_sem_minday",
+      "soneca_manha_fds_minday",
+      "soneca_tarde_fds_minday",
+      "soneca_noite_fds_minday"
+    ),
+
+    sep = "/",
+    convert = TRUE
+  ) |>
+  mutate(
+    soneca_manha_sem_minday = as.numeric(soneca_manha_sem_minday),
+    soneca_tarde_sem_minday = as.numeric(soneca_tarde_sem_minday),
+    soneca_noite_sem_minday = as.numeric(soneca_noite_sem_minday),
+    soneca_manha_fds_minday = as.numeric(soneca_manha_fds_minday),
+    soneca_tarde_fds_minday = as.numeric(soneca_tarde_fds_minday),
+    soneca_noite_fds_minday = as.numeric(soneca_noite_fds_minday)
+  ) |>
+  mutate(
+    total_soneca_sem_minday = soneca_manha_sem_minday + soneca_tarde_sem_minday + soneca_noite_sem_minday,
+    total_soneca_minday_fds = soneca_manha_fds_minday + soneca_tarde_fds_minday + soneca_noite_fds_minday
+  ) |>
+  mutate(
+    total_soneca_minday = total_soneca_sem_minday + total_soneca_minday_fds
+  ) |>
+  # separando as tentativas leitura
+  tidyr::separate(
+    col = sbq_2a_2b,
+    c(
+      "leitura_manha_sem_minday",
+      "leitura_tarde_sem_minday",
+      "leitura_noite_sem_minday",
+      "leitura_manha_fds_minday",
+      "leitura_tarde_fds_minday",
+      "leitura_noite_fds_minday"
+    ),
+
+    sep = "/",
+    convert = TRUE
+  ) |>
+  mutate(
+    leitura_manha_sem_minday = as.numeric(leitura_manha_sem_minday),
+    leitura_tarde_sem_minday = as.numeric(leitura_tarde_sem_minday),
+    leitura_noite_sem_minday = as.numeric(leitura_noite_sem_minday),
+    leitura_manha_fds_minday = as.numeric(leitura_manha_fds_minday),
+    leitura_tarde_fds_minday = as.numeric(leitura_tarde_fds_minday),
+    leitura_noite_fds_minday = as.numeric(leitura_noite_fds_minday)
+  ) |>
+  mutate(
+    total_leitura_sem_minday = leitura_manha_sem_minday + leitura_tarde_sem_minday + leitura_noite_sem_minday,
+    total_leitura_minday_fds = leitura_manha_fds_minday + leitura_tarde_fds_minday + leitura_noite_fds_minday
+  ) |>
+  mutate(
+    total_leitura_minday = total_leitura_sem_minday + total_leitura_minday_fds
+  ) |>
+  # separando as tentativas oracoes musica
+  tidyr::separate(
+    col = sbq_3a_3b,
+    c(
+      "musica_manha_sem_minday",
+      "musica_tarde_sem_minday",
+      "musica_noite_sem_minday",
+      "musica_manha_fds_minday",
+      "musica_tarde_fds_minday",
+      "musica_noite_fds_minday"
+    ),
+
+    sep = "/",
+    convert = TRUE
+  ) |>
+  mutate(
+    musica_manha_sem_minday = as.numeric(musica_manha_sem_minday),
+    musica_tarde_sem_minday = as.numeric(musica_tarde_sem_minday),
+    musica_noite_sem_minday = as.numeric(musica_noite_sem_minday),
+    musica_manha_fds_minday = as.numeric(musica_manha_fds_minday),
+    musica_tarde_fds_minday = as.numeric(musica_tarde_fds_minday),
+    musica_noite_fds_minday = as.numeric(musica_noite_fds_minday)
+  ) |>
+  mutate(
+    total_musica_sem_minday = musica_manha_sem_minday + musica_tarde_sem_minday + musica_noite_sem_minday,
+    total_musica_minday_fds = musica_manha_fds_minday + musica_tarde_fds_minday + musica_noite_fds_minday
+  ) |>
+  mutate(
+    total_musica_minday = total_musica_sem_minday + total_musica_minday_fds
+  ) |>
+  # separando as tentativas tv
+  tidyr::separate(
+    col = sbq_4a_4b,
+    c(
+      "tv_manha_sem_minday",
+      "tv_tarde_sem_minday",
+      "tv_noite_sem_minday",
+      "tv_manha_fds_minday",
+      "tv_tarde_fds_minday",
+      "tv_noite_fds_minday"
+    ),
+
+    sep = "/",
+    convert = TRUE
+  ) |>
+  mutate(
+    tv_manha_sem_minday = as.numeric(tv_manha_sem_minday),
+    tv_tarde_sem_minday = as.numeric(tv_tarde_sem_minday),
+    tv_noite_sem_minday = as.numeric(tv_noite_sem_minday),
+    tv_manha_fds_minday = as.numeric(tv_manha_fds_minday),
+    tv_tarde_fds_minday = as.numeric(tv_tarde_fds_minday),
+    tv_noite_fds_minday = as.numeric(tv_noite_fds_minday)
+  ) |>
+  mutate(
+    total_tv_sem_minday = tv_manha_sem_minday + tv_tarde_sem_minday + tv_noite_sem_minday,
+    total_tv_minday_fds = tv_manha_fds_minday + tv_tarde_fds_minday + tv_noite_fds_minday
+  ) |>
+  mutate(
+    total_tv_minday = total_tv_sem_minday + total_tv_minday_fds
+  ) |>
+  # separando as tentativas jogos
+  tidyr::separate(
+    col = sbq_5a_5b,
+    c(
+      "jogos_manha_sem_minday",
+      "jogos_tarde_sem_minday",
+      "jogos_noite_sem_minday",
+      "jogos_manha_fds_minday",
+      "jogos_tarde_fds_minday",
+      "jogos_noite_fds_minday"
+    ),
+
+    sep = "/",
+    convert = TRUE
+  ) |>
+  mutate(
+    jogos_manha_sem_minday = as.numeric(jogos_manha_sem_minday),
+    jogos_tarde_sem_minday = as.numeric(jogos_tarde_sem_minday),
+    jogos_noite_sem_minday = as.numeric(jogos_noite_sem_minday),
+    jogos_manha_fds_minday = as.numeric(jogos_manha_fds_minday),
+    jogos_tarde_fds_minday = as.numeric(jogos_tarde_fds_minday),
+    jogos_noite_fds_minday = as.numeric(jogos_noite_fds_minday)
+  ) |>
+  mutate(
+    total_jogos_sem_minday = jogos_manha_sem_minday + jogos_tarde_sem_minday + jogos_noite_sem_minday,
+    total_jogos_minday_fds = jogos_manha_fds_minday + jogos_tarde_fds_minday + jogos_noite_fds_minday
+  ) |>
+  mutate(
+    total_jogos_minday = total_jogos_sem_minday + total_jogos_minday_fds
+  ) |>
+  # separando as tentativas telefone
+  tidyr::separate(
+    col = sbq_6a_6b,
+    c(
+      "telefone_manha_sem_minday",
+      "telefone_tarde_sem_minday",
+      "telefone_noite_sem_minday",
+      "telefone_manha_fds_minday",
+      "telefone_tarde_fds_minday",
+      "telefone_noite_fds_minday"
+    ),
+
+    sep = "/",
+    convert = TRUE
+  ) |>
+  mutate(
+    telefone_manha_sem_minday = as.numeric(telefone_manha_sem_minday),
+    telefone_tarde_sem_minday = as.numeric(telefone_tarde_sem_minday),
+    telefone_noite_sem_minday = as.numeric(telefone_noite_sem_minday),
+    telefone_manha_fds_minday = as.numeric(telefone_manha_fds_minday),
+    telefone_tarde_fds_minday = as.numeric(telefone_tarde_fds_minday),
+    telefone_noite_fds_minday = as.numeric(telefone_noite_fds_minday)
+  ) |>
+  mutate(
+    total_telefone_sem_minday = telefone_manha_sem_minday + telefone_tarde_sem_minday + telefone_noite_sem_minday,
+    total_telefone_minday_fds = telefone_manha_fds_minday + telefone_tarde_fds_minday + telefone_noite_fds_minday
+  ) |>
+  mutate(
+    total_telefone_minday = total_telefone_sem_minday + total_telefone_minday_fds
+  ) |>
+  # separando as tentativas telefone
+  tidyr::separate(
+    col = sbq_7a_7b,
+    c(
+      "pc_manha_sem_minday",
+      "pc_tarde_sem_minday",
+      "pc_noite_sem_minday",
+      "pc_manha_fds_minday",
+      "pc_tarde_fds_minday",
+      "pc_noite_fds_minday"
+    ),
+
+    sep = "/",
+    convert = TRUE
+  ) |>
+  mutate(
+    pc_manha_sem_minday = as.numeric(pc_manha_sem_minday),
+    pc_tarde_sem_minday = as.numeric(pc_tarde_sem_minday),
+    pc_noite_sem_minday = as.numeric(pc_noite_sem_minday),
+    pc_manha_fds_minday = as.numeric(pc_manha_fds_minday),
+    pc_tarde_fds_minday = as.numeric(pc_tarde_fds_minday),
+    pc_noite_fds_minday = as.numeric(pc_noite_fds_minday)
+  ) |>
+  mutate(
+    total_pc_sem_minday = pc_manha_sem_minday + pc_tarde_sem_minday + pc_noite_sem_minday,
+    total_pc_minday_fds = pc_manha_fds_minday + pc_tarde_fds_minday + pc_noite_fds_minday
+  ) |>
+  mutate(
+    total_pc_minday = total_pc_sem_minday + total_pc_minday_fds
+  ) |>
+  # separando as tentativas atvdomesticas
+  tidyr::separate(
+    col = sbq_8a_8b,
+    c(
+      "atvdomesticas_manha_sem_minday",
+      "atvdomesticas_tarde_sem_minday",
+      "atvdomesticas_noite_sem_minday",
+      "atvdomesticas_manha_fds_minday",
+      "atvdomesticas_tarde_fds_minday",
+      "atvdomesticas_noite_fds_minday"
+    ),
+
+    sep = "/",
+    convert = TRUE
+  ) |>
+  mutate(
+    atvdomesticas_manha_sem_minday = as.numeric(atvdomesticas_manha_sem_minday),
+    atvdomesticas_tarde_sem_minday = as.numeric(atvdomesticas_tarde_sem_minday),
+    atvdomesticas_noite_sem_minday = as.numeric(atvdomesticas_noite_sem_minday),
+    atvdomesticas_manha_fds_minday = as.numeric(atvdomesticas_manha_fds_minday),
+    atvdomesticas_tarde_fds_minday = as.numeric(atvdomesticas_tarde_fds_minday),
+    atvdomesticas_noite_fds_minday = as.numeric(atvdomesticas_noite_fds_minday)
+  ) |>
+  mutate(
+    total_atvdomesticas_sem_minday = atvdomesticas_manha_sem_minday + atvdomesticas_tarde_sem_minday + atvdomesticas_noite_sem_minday,
+    total_atvdomesticas_minday_fds = atvdomesticas_manha_fds_minday + atvdomesticas_tarde_fds_minday + atvdomesticas_noite_fds_minday
+  ) |>
+  mutate(
+    total_atvdomesticas_minday = total_atvdomesticas_sem_minday + total_atvdomesticas_minday_fds
+  ) |>
+  # separando as tentativas transporte
+  tidyr::separate(
+    col = sbq_9a_9b,
+    c(
+      "transporte_manha_sem_minday",
+      "transporte_tarde_sem_minday",
+      "transporte_noite_sem_minday",
+      "transporte_manha_fds_minday",
+      "transporte_tarde_fds_minday",
+      "transporte_noite_fds_minday"
+    ),
+
+    sep = "/",
+    convert = TRUE
+  ) |>
+  mutate(
+    transporte_manha_sem_minday = as.numeric(transporte_manha_sem_minday),
+    transporte_tarde_sem_minday = as.numeric(transporte_tarde_sem_minday),
+    transporte_noite_sem_minday = as.numeric(transporte_noite_sem_minday),
+    transporte_manha_fds_minday = as.numeric(transporte_manha_fds_minday),
+    transporte_tarde_fds_minday = as.numeric(transporte_tarde_fds_minday),
+    transporte_noite_fds_minday = as.numeric(transporte_noite_fds_minday)
+  ) |>
+  mutate(
+    total_transporte_sem_minday = transporte_manha_sem_minday + transporte_tarde_sem_minday + transporte_noite_sem_minday,
+    total_transporte_minday_fds = transporte_manha_fds_minday + transporte_tarde_fds_minday + transporte_noite_fds_minday
+  ) |>
+  mutate(
+    total_transporte_minday = total_transporte_sem_minday + total_transporte_minday_fds
+  ) |>
+  # separando as tentativas igreja ou atvculturais
+  tidyr::separate(
+    col = sbq_10a_10b,
+    c(
+      "atvculturais_manha_sem_minday",
+      "atvculturais_tarde_sem_minday",
+      "atvculturais_noite_sem_minday",
+      "atvculturais_manha_fds_minday",
+      "atvculturais_tarde_fds_minday",
+      "atvculturais_noite_fds_minday"
+    ),
+
+    sep = "/",
+    convert = TRUE
+  ) |>
+  mutate(
+    atvculturais_manha_sem_minday = as.numeric(atvculturais_manha_sem_minday),
+    atvculturais_tarde_sem_minday = as.numeric(atvculturais_tarde_sem_minday),
+    atvculturais_noite_sem_minday = as.numeric(atvculturais_noite_sem_minday),
+    atvculturais_manha_fds_minday = as.numeric(atvculturais_manha_fds_minday),
+    atvculturais_tarde_fds_minday = as.numeric(atvculturais_tarde_fds_minday),
+    atvculturais_noite_fds_minday = as.numeric(atvculturais_noite_fds_minday)
+  ) |>
+  mutate(
+    total_atvculturais_sem_minday = atvculturais_manha_sem_minday + atvculturais_tarde_sem_minday + atvculturais_noite_sem_minday,
+    total_atvculturais_minday_fds = atvculturais_manha_fds_minday + atvculturais_tarde_fds_minday + atvculturais_noite_fds_minday
+  ) |>
+  mutate(
+    total_atvculturais_minday = total_atvculturais_sem_minday + total_atvculturais_minday_fds
+  ) |>
+  select(-starts_with("sbq"))
 
 
-# falta ajustarLASA
+# falta calcular SB mentalmente passivo e ativo
 
 glimpse(df_ajustado)

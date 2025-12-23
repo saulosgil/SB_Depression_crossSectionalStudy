@@ -285,7 +285,15 @@ df_ajustado <-
          -whoqol_fisico,
          -whoqol_ambiente,
          -whoqol_psicol,
-         -whoqol_social)
+         -whoqol_social) |>
+# arrendondando os valores
+  mutate(
+    whoqol_fisico_escore_100 = round(whoqol_fisico_escore_100, 0),
+    whoqol_psicol_escore_100 = round(whoqol_psicol_escore_100, 0),
+    whoqol_social_escore_100 = round(whoqol_social_escore_100, 0),
+    whoqol_ambiente_escore_100 = round(whoqol_ambiente_escore_100, 0)
+  )
+
 
 # Calculando IPAC -----------------------------------------------------------------------------
 df_ajustado <-
@@ -298,6 +306,14 @@ df_ajustado <-
     tempo_sentado_minday = ipac_4a,
     tempo_sentado_fds_minday = ipac_4b
   ) |>
+  mutate(
+    caminhada_10min_minday = round(caminhada_10min_minday, 0),
+    atv_moderada_minday = round(atv_moderada_minday, 0),
+    atv_vigorosa_minday = round(atv_vigorosa_minday, 0),
+    mvpa_minday = round(atv_moderada_minday + atv_vigorosa_minday, 0),
+    tempo_sentado_minday = round(ipac_4a, 0),
+    tempo_sentado_fds_minday = round(ipac_4b, 0)
+  )  |>
   select(-starts_with("ipac"))
 
 # Calculando LASA -----------------------------------------------------------------------------
@@ -319,19 +335,27 @@ df_ajustado <-
     convert = TRUE
   ) |>
   mutate(
-    soneca_manha_sem_minday = as.numeric(soneca_manha_sem_minday),
-    soneca_tarde_sem_minday = as.numeric(soneca_tarde_sem_minday),
-    soneca_noite_sem_minday = as.numeric(soneca_noite_sem_minday),
-    soneca_manha_fds_minday = as.numeric(soneca_manha_fds_minday),
-    soneca_tarde_fds_minday = as.numeric(soneca_tarde_fds_minday),
-    soneca_noite_fds_minday = as.numeric(soneca_noite_fds_minday)
+    soneca_manha_sem_minday = as.integer(soneca_manha_sem_minday),
+    soneca_tarde_sem_minday = as.integer(soneca_tarde_sem_minday),
+    soneca_noite_sem_minday = as.integer(soneca_noite_sem_minday),
+    soneca_manha_fds_minday = as.integer(soneca_manha_fds_minday),
+    soneca_tarde_fds_minday = as.integer(soneca_tarde_fds_minday),
+    soneca_noite_fds_minday = as.integer(soneca_noite_fds_minday)
+  ) |>
+  mutate(
+    soneca_manha_sem_minday = if_else(is.na(soneca_manha_sem_minday), 0, soneca_manha_sem_minday),
+    soneca_tarde_sem_minday = if_else(is.na(soneca_tarde_sem_minday), 0, soneca_tarde_sem_minday),
+    soneca_noite_sem_minday = if_else(is.na(soneca_noite_sem_minday), 0, soneca_noite_sem_minday),
+    soneca_manha_fds_minday = if_else(is.na(soneca_manha_fds_minday), 0, soneca_manha_fds_minday),
+    soneca_tarde_fds_minday = if_else(is.na(soneca_tarde_fds_minday), 0, soneca_tarde_fds_minday),
+    soneca_noite_fds_minday = if_else(is.na(soneca_noite_fds_minday), 0, soneca_noite_fds_minday)
   ) |>
   mutate(
     total_soneca_sem_minday = soneca_manha_sem_minday + soneca_tarde_sem_minday + soneca_noite_sem_minday,
     total_soneca_minday_fds = soneca_manha_fds_minday + soneca_tarde_fds_minday + soneca_noite_fds_minday
   ) |>
   mutate(
-    total_soneca_minday = total_soneca_sem_minday + total_soneca_minday_fds
+    total_soneca_minday = (total_soneca_sem_minday * 5 + total_soneca_minday_fds * 2)/7
   ) |>
   # separando as tentativas leitura
   tidyr::separate(
@@ -349,19 +373,27 @@ df_ajustado <-
     convert = TRUE
   ) |>
   mutate(
-    leitura_manha_sem_minday = as.numeric(leitura_manha_sem_minday),
-    leitura_tarde_sem_minday = as.numeric(leitura_tarde_sem_minday),
-    leitura_noite_sem_minday = as.numeric(leitura_noite_sem_minday),
-    leitura_manha_fds_minday = as.numeric(leitura_manha_fds_minday),
-    leitura_tarde_fds_minday = as.numeric(leitura_tarde_fds_minday),
-    leitura_noite_fds_minday = as.numeric(leitura_noite_fds_minday)
+    leitura_manha_sem_minday = as.integer(leitura_manha_sem_minday),
+    leitura_tarde_sem_minday = as.integer(leitura_tarde_sem_minday),
+    leitura_noite_sem_minday = as.integer(leitura_noite_sem_minday),
+    leitura_manha_fds_minday = as.integer(leitura_manha_fds_minday),
+    leitura_tarde_fds_minday = as.integer(leitura_tarde_fds_minday),
+    leitura_noite_fds_minday = as.integer(leitura_noite_fds_minday)
+  ) |>
+  mutate(
+    leitura_manha_sem_minday = if_else(is.na(leitura_manha_sem_minday), 0, leitura_manha_sem_minday),
+    leitura_tarde_sem_minday = if_else(is.na(leitura_tarde_sem_minday), 0, leitura_tarde_sem_minday),
+    leitura_noite_sem_minday = if_else(is.na(leitura_noite_sem_minday), 0, leitura_noite_sem_minday),
+    leitura_manha_fds_minday = if_else(is.na(leitura_manha_fds_minday), 0, leitura_manha_fds_minday),
+    leitura_tarde_fds_minday = if_else(is.na(leitura_tarde_fds_minday), 0, leitura_tarde_fds_minday),
+    leitura_noite_fds_minday = if_else(is.na(leitura_noite_fds_minday), 0, leitura_noite_fds_minday)
   ) |>
   mutate(
     total_leitura_sem_minday = leitura_manha_sem_minday + leitura_tarde_sem_minday + leitura_noite_sem_minday,
     total_leitura_minday_fds = leitura_manha_fds_minday + leitura_tarde_fds_minday + leitura_noite_fds_minday
   ) |>
   mutate(
-    total_leitura_minday = total_leitura_sem_minday + total_leitura_minday_fds
+    total_leitura_minday = (total_leitura_sem_minday * 5 + total_leitura_minday_fds * 2)/7
   ) |>
   # separando as tentativas oracoes musica
   tidyr::separate(
@@ -379,19 +411,27 @@ df_ajustado <-
     convert = TRUE
   ) |>
   mutate(
-    musica_manha_sem_minday = as.numeric(musica_manha_sem_minday),
-    musica_tarde_sem_minday = as.numeric(musica_tarde_sem_minday),
-    musica_noite_sem_minday = as.numeric(musica_noite_sem_minday),
-    musica_manha_fds_minday = as.numeric(musica_manha_fds_minday),
-    musica_tarde_fds_minday = as.numeric(musica_tarde_fds_minday),
-    musica_noite_fds_minday = as.numeric(musica_noite_fds_minday)
+    musica_manha_sem_minday = as.integer(musica_manha_sem_minday),
+    musica_tarde_sem_minday = as.integer(musica_tarde_sem_minday),
+    musica_noite_sem_minday = as.integer(musica_noite_sem_minday),
+    musica_manha_fds_minday = as.integer(musica_manha_fds_minday),
+    musica_tarde_fds_minday = as.integer(musica_tarde_fds_minday),
+    musica_noite_fds_minday = as.integer(musica_noite_fds_minday)
+  ) |>
+  mutate(
+    musica_manha_sem_minday = if_else(is.na(musica_manha_sem_minday), 0, musica_manha_sem_minday),
+    musica_tarde_sem_minday = if_else(is.na(musica_tarde_sem_minday), 0, musica_tarde_sem_minday),
+    musica_noite_sem_minday = if_else(is.na(musica_noite_sem_minday), 0, musica_noite_sem_minday),
+    musica_manha_fds_minday = if_else(is.na(musica_manha_fds_minday), 0, musica_manha_fds_minday),
+    musica_tarde_fds_minday = if_else(is.na(musica_tarde_fds_minday), 0, musica_tarde_fds_minday),
+    musica_noite_fds_minday = if_else(is.na(musica_noite_fds_minday), 0, musica_noite_fds_minday)
   ) |>
   mutate(
     total_musica_sem_minday = musica_manha_sem_minday + musica_tarde_sem_minday + musica_noite_sem_minday,
     total_musica_minday_fds = musica_manha_fds_minday + musica_tarde_fds_minday + musica_noite_fds_minday
   ) |>
   mutate(
-    total_musica_minday = total_musica_sem_minday + total_musica_minday_fds
+    total_musica_minday = (total_musica_sem_minday * 5 + total_musica_minday_fds * 2)/7
   ) |>
   # separando as tentativas tv
   tidyr::separate(
@@ -409,19 +449,27 @@ df_ajustado <-
     convert = TRUE
   ) |>
   mutate(
-    tv_manha_sem_minday = as.numeric(tv_manha_sem_minday),
-    tv_tarde_sem_minday = as.numeric(tv_tarde_sem_minday),
-    tv_noite_sem_minday = as.numeric(tv_noite_sem_minday),
-    tv_manha_fds_minday = as.numeric(tv_manha_fds_minday),
-    tv_tarde_fds_minday = as.numeric(tv_tarde_fds_minday),
-    tv_noite_fds_minday = as.numeric(tv_noite_fds_minday)
+    tv_manha_sem_minday = as.integer(tv_manha_sem_minday),
+    tv_tarde_sem_minday = as.integer(tv_tarde_sem_minday),
+    tv_noite_sem_minday = as.integer(tv_noite_sem_minday),
+    tv_manha_fds_minday = as.integer(tv_manha_fds_minday),
+    tv_tarde_fds_minday = as.integer(tv_tarde_fds_minday),
+    tv_noite_fds_minday = as.integer(tv_noite_fds_minday)
+  ) |>
+  mutate(
+    tv_manha_sem_minday = if_else(is.na(tv_manha_sem_minday), 0, tv_manha_sem_minday),
+    tv_tarde_sem_minday = if_else(is.na(tv_tarde_sem_minday), 0, tv_tarde_sem_minday),
+    tv_noite_sem_minday = if_else(is.na(tv_noite_sem_minday), 0, tv_noite_sem_minday),
+    tv_manha_fds_minday = if_else(is.na(tv_manha_fds_minday), 0, tv_manha_fds_minday),
+    tv_tarde_fds_minday = if_else(is.na(tv_tarde_fds_minday), 0, tv_tarde_fds_minday),
+    tv_noite_fds_minday = if_else(is.na(tv_noite_fds_minday), 0, tv_noite_fds_minday)
   ) |>
   mutate(
     total_tv_sem_minday = tv_manha_sem_minday + tv_tarde_sem_minday + tv_noite_sem_minday,
     total_tv_minday_fds = tv_manha_fds_minday + tv_tarde_fds_minday + tv_noite_fds_minday
   ) |>
   mutate(
-    total_tv_minday = total_tv_sem_minday + total_tv_minday_fds
+    total_tv_minday = (total_tv_sem_minday * 5 + total_tv_minday_fds * 2)/7
   ) |>
   # separando as tentativas jogos
   tidyr::separate(
@@ -439,19 +487,27 @@ df_ajustado <-
     convert = TRUE
   ) |>
   mutate(
-    jogos_manha_sem_minday = as.numeric(jogos_manha_sem_minday),
-    jogos_tarde_sem_minday = as.numeric(jogos_tarde_sem_minday),
-    jogos_noite_sem_minday = as.numeric(jogos_noite_sem_minday),
-    jogos_manha_fds_minday = as.numeric(jogos_manha_fds_minday),
-    jogos_tarde_fds_minday = as.numeric(jogos_tarde_fds_minday),
-    jogos_noite_fds_minday = as.numeric(jogos_noite_fds_minday)
+    jogos_manha_sem_minday = as.integer(jogos_manha_sem_minday),
+    jogos_tarde_sem_minday = as.integer(jogos_tarde_sem_minday),
+    jogos_noite_sem_minday = as.integer(jogos_noite_sem_minday),
+    jogos_manha_fds_minday = as.integer(jogos_manha_fds_minday),
+    jogos_tarde_fds_minday = as.integer(jogos_tarde_fds_minday),
+    jogos_noite_fds_minday = as.integer(jogos_noite_fds_minday)
+  ) |>
+  mutate(
+    jogos_manha_sem_minday = if_else(is.na(jogos_manha_sem_minday), 0, jogos_manha_sem_minday),
+    jogos_tarde_sem_minday = if_else(is.na(jogos_tarde_sem_minday), 0, jogos_tarde_sem_minday),
+    jogos_noite_sem_minday = if_else(is.na(jogos_noite_sem_minday), 0, jogos_noite_sem_minday),
+    jogos_manha_fds_minday = if_else(is.na(jogos_manha_fds_minday), 0, jogos_manha_fds_minday),
+    jogos_tarde_fds_minday = if_else(is.na(jogos_tarde_fds_minday), 0, jogos_tarde_fds_minday),
+    jogos_noite_fds_minday = if_else(is.na(jogos_noite_fds_minday), 0, jogos_noite_fds_minday)
   ) |>
   mutate(
     total_jogos_sem_minday = jogos_manha_sem_minday + jogos_tarde_sem_minday + jogos_noite_sem_minday,
     total_jogos_minday_fds = jogos_manha_fds_minday + jogos_tarde_fds_minday + jogos_noite_fds_minday
   ) |>
   mutate(
-    total_jogos_minday = total_jogos_sem_minday + total_jogos_minday_fds
+    total_jogos_minday = (total_jogos_sem_minday * 5 + total_jogos_minday_fds * 2)/7
   ) |>
   # separando as tentativas telefone
   tidyr::separate(
@@ -469,19 +525,27 @@ df_ajustado <-
     convert = TRUE
   ) |>
   mutate(
-    telefone_manha_sem_minday = as.numeric(telefone_manha_sem_minday),
-    telefone_tarde_sem_minday = as.numeric(telefone_tarde_sem_minday),
-    telefone_noite_sem_minday = as.numeric(telefone_noite_sem_minday),
-    telefone_manha_fds_minday = as.numeric(telefone_manha_fds_minday),
-    telefone_tarde_fds_minday = as.numeric(telefone_tarde_fds_minday),
-    telefone_noite_fds_minday = as.numeric(telefone_noite_fds_minday)
+    telefone_manha_sem_minday = as.integer(telefone_manha_sem_minday),
+    telefone_tarde_sem_minday = as.integer(telefone_tarde_sem_minday),
+    telefone_noite_sem_minday = as.integer(telefone_noite_sem_minday),
+    telefone_manha_fds_minday = as.integer(telefone_manha_fds_minday),
+    telefone_tarde_fds_minday = as.integer(telefone_tarde_fds_minday),
+    telefone_noite_fds_minday = as.integer(telefone_noite_fds_minday)
+  ) |>
+  mutate(
+    telefone_manha_sem_minday = if_else(is.na(telefone_manha_sem_minday), 0, telefone_manha_sem_minday),
+    telefone_tarde_sem_minday = if_else(is.na(telefone_tarde_sem_minday), 0, telefone_tarde_sem_minday),
+    telefone_noite_sem_minday = if_else(is.na(telefone_noite_sem_minday), 0, telefone_noite_sem_minday),
+    telefone_manha_fds_minday = if_else(is.na(telefone_manha_fds_minday), 0, telefone_manha_fds_minday),
+    telefone_tarde_fds_minday = if_else(is.na(telefone_tarde_fds_minday), 0, telefone_tarde_fds_minday),
+    telefone_noite_fds_minday = if_else(is.na(telefone_noite_fds_minday), 0, telefone_noite_fds_minday)
   ) |>
   mutate(
     total_telefone_sem_minday = telefone_manha_sem_minday + telefone_tarde_sem_minday + telefone_noite_sem_minday,
     total_telefone_minday_fds = telefone_manha_fds_minday + telefone_tarde_fds_minday + telefone_noite_fds_minday
   ) |>
   mutate(
-    total_telefone_minday = total_telefone_sem_minday + total_telefone_minday_fds
+    total_telefone_minday = (total_telefone_sem_minday * 5 + total_telefone_minday_fds * 2)/7
   ) |>
   # separando as tentativas telefone
   tidyr::separate(
@@ -499,19 +563,27 @@ df_ajustado <-
     convert = TRUE
   ) |>
   mutate(
-    pc_manha_sem_minday = as.numeric(pc_manha_sem_minday),
-    pc_tarde_sem_minday = as.numeric(pc_tarde_sem_minday),
-    pc_noite_sem_minday = as.numeric(pc_noite_sem_minday),
-    pc_manha_fds_minday = as.numeric(pc_manha_fds_minday),
-    pc_tarde_fds_minday = as.numeric(pc_tarde_fds_minday),
-    pc_noite_fds_minday = as.numeric(pc_noite_fds_minday)
+    pc_manha_sem_minday = as.integer(pc_manha_sem_minday),
+    pc_tarde_sem_minday = as.integer(pc_tarde_sem_minday),
+    pc_noite_sem_minday = as.integer(pc_noite_sem_minday),
+    pc_manha_fds_minday = as.integer(pc_manha_fds_minday),
+    pc_tarde_fds_minday = as.integer(pc_tarde_fds_minday),
+    pc_noite_fds_minday = as.integer(pc_noite_fds_minday)
+  ) |>
+  mutate(
+    pc_manha_sem_minday = if_else(is.na(pc_manha_sem_minday), 0, pc_manha_sem_minday),
+    pc_tarde_sem_minday = if_else(is.na(pc_tarde_sem_minday), 0, pc_tarde_sem_minday),
+    pc_noite_sem_minday = if_else(is.na(pc_noite_sem_minday), 0, pc_noite_sem_minday),
+    pc_manha_fds_minday = if_else(is.na(pc_manha_fds_minday), 0, pc_manha_fds_minday),
+    pc_tarde_fds_minday = if_else(is.na(pc_tarde_fds_minday), 0, pc_tarde_fds_minday),
+    pc_noite_fds_minday = if_else(is.na(pc_noite_fds_minday), 0, pc_noite_fds_minday)
   ) |>
   mutate(
     total_pc_sem_minday = pc_manha_sem_minday + pc_tarde_sem_minday + pc_noite_sem_minday,
     total_pc_minday_fds = pc_manha_fds_minday + pc_tarde_fds_minday + pc_noite_fds_minday
   ) |>
   mutate(
-    total_pc_minday = total_pc_sem_minday + total_pc_minday_fds
+    total_pc_minday = (total_pc_sem_minday * 5 + total_pc_minday_fds * 2)/7
   ) |>
   # separando as tentativas atvdomesticas
   tidyr::separate(
@@ -529,19 +601,27 @@ df_ajustado <-
     convert = TRUE
   ) |>
   mutate(
-    atvdomesticas_manha_sem_minday = as.numeric(atvdomesticas_manha_sem_minday),
-    atvdomesticas_tarde_sem_minday = as.numeric(atvdomesticas_tarde_sem_minday),
-    atvdomesticas_noite_sem_minday = as.numeric(atvdomesticas_noite_sem_minday),
-    atvdomesticas_manha_fds_minday = as.numeric(atvdomesticas_manha_fds_minday),
-    atvdomesticas_tarde_fds_minday = as.numeric(atvdomesticas_tarde_fds_minday),
-    atvdomesticas_noite_fds_minday = as.numeric(atvdomesticas_noite_fds_minday)
+    atvdomesticas_manha_sem_minday = as.integer(atvdomesticas_manha_sem_minday),
+    atvdomesticas_tarde_sem_minday = as.integer(atvdomesticas_tarde_sem_minday),
+    atvdomesticas_noite_sem_minday = as.integer(atvdomesticas_noite_sem_minday),
+    atvdomesticas_manha_fds_minday = as.integer(atvdomesticas_manha_fds_minday),
+    atvdomesticas_tarde_fds_minday = as.integer(atvdomesticas_tarde_fds_minday),
+    atvdomesticas_noite_fds_minday = as.integer(atvdomesticas_noite_fds_minday)
+  ) |>
+  mutate(
+    atvdomesticas_manha_sem_minday = if_else(is.na(atvdomesticas_manha_sem_minday), 0, atvdomesticas_manha_sem_minday),
+    atvdomesticas_tarde_sem_minday = if_else(is.na(atvdomesticas_tarde_sem_minday), 0, atvdomesticas_tarde_sem_minday),
+    atvdomesticas_noite_sem_minday = if_else(is.na(atvdomesticas_noite_sem_minday), 0, atvdomesticas_noite_sem_minday),
+    atvdomesticas_manha_fds_minday = if_else(is.na(atvdomesticas_manha_fds_minday), 0, atvdomesticas_manha_fds_minday),
+    atvdomesticas_tarde_fds_minday = if_else(is.na(atvdomesticas_tarde_fds_minday), 0, atvdomesticas_tarde_fds_minday),
+    atvdomesticas_noite_fds_minday = if_else(is.na(atvdomesticas_noite_fds_minday), 0, atvdomesticas_noite_fds_minday)
   ) |>
   mutate(
     total_atvdomesticas_sem_minday = atvdomesticas_manha_sem_minday + atvdomesticas_tarde_sem_minday + atvdomesticas_noite_sem_minday,
     total_atvdomesticas_minday_fds = atvdomesticas_manha_fds_minday + atvdomesticas_tarde_fds_minday + atvdomesticas_noite_fds_minday
   ) |>
   mutate(
-    total_atvdomesticas_minday = total_atvdomesticas_sem_minday + total_atvdomesticas_minday_fds
+    total_atvdomesticas_minday = (total_atvdomesticas_sem_minday * 5 + total_atvdomesticas_minday_fds * 2)/7
   ) |>
   # separando as tentativas transporte
   tidyr::separate(
@@ -559,19 +639,27 @@ df_ajustado <-
     convert = TRUE
   ) |>
   mutate(
-    transporte_manha_sem_minday = as.numeric(transporte_manha_sem_minday),
-    transporte_tarde_sem_minday = as.numeric(transporte_tarde_sem_minday),
-    transporte_noite_sem_minday = as.numeric(transporte_noite_sem_minday),
-    transporte_manha_fds_minday = as.numeric(transporte_manha_fds_minday),
-    transporte_tarde_fds_minday = as.numeric(transporte_tarde_fds_minday),
-    transporte_noite_fds_minday = as.numeric(transporte_noite_fds_minday)
+    transporte_manha_sem_minday = as.integer(transporte_manha_sem_minday),
+    transporte_tarde_sem_minday = as.integer(transporte_tarde_sem_minday),
+    transporte_noite_sem_minday = as.integer(transporte_noite_sem_minday),
+    transporte_manha_fds_minday = as.integer(transporte_manha_fds_minday),
+    transporte_tarde_fds_minday = as.integer(transporte_tarde_fds_minday),
+    transporte_noite_fds_minday = as.integer(transporte_noite_fds_minday)
+  ) |>
+  mutate(
+    transporte_manha_sem_minday = if_else(is.na(transporte_manha_sem_minday), 0, transporte_manha_sem_minday),
+    transporte_tarde_sem_minday = if_else(is.na(transporte_tarde_sem_minday), 0, transporte_tarde_sem_minday),
+    transporte_noite_sem_minday = if_else(is.na(transporte_noite_sem_minday), 0, transporte_noite_sem_minday),
+    transporte_manha_fds_minday = if_else(is.na(transporte_manha_fds_minday), 0, transporte_manha_fds_minday),
+    transporte_tarde_fds_minday = if_else(is.na(transporte_tarde_fds_minday), 0, transporte_tarde_fds_minday),
+    transporte_noite_fds_minday = if_else(is.na(transporte_noite_fds_minday), 0, transporte_noite_fds_minday)
   ) |>
   mutate(
     total_transporte_sem_minday = transporte_manha_sem_minday + transporte_tarde_sem_minday + transporte_noite_sem_minday,
     total_transporte_minday_fds = transporte_manha_fds_minday + transporte_tarde_fds_minday + transporte_noite_fds_minday
   ) |>
   mutate(
-    total_transporte_minday = total_transporte_sem_minday + total_transporte_minday_fds
+    total_transporte_minday = (total_transporte_sem_minday * 5 + total_transporte_minday_fds * 2)/7
   ) |>
   # separando as tentativas igreja ou atvculturais
   tidyr::separate(
@@ -589,23 +677,74 @@ df_ajustado <-
     convert = TRUE
   ) |>
   mutate(
-    atvculturais_manha_sem_minday = as.numeric(atvculturais_manha_sem_minday),
-    atvculturais_tarde_sem_minday = as.numeric(atvculturais_tarde_sem_minday),
-    atvculturais_noite_sem_minday = as.numeric(atvculturais_noite_sem_minday),
-    atvculturais_manha_fds_minday = as.numeric(atvculturais_manha_fds_minday),
-    atvculturais_tarde_fds_minday = as.numeric(atvculturais_tarde_fds_minday),
-    atvculturais_noite_fds_minday = as.numeric(atvculturais_noite_fds_minday)
+    atvculturais_manha_sem_minday = as.integer(atvculturais_manha_sem_minday),
+    atvculturais_tarde_sem_minday = as.integer(atvculturais_tarde_sem_minday),
+    atvculturais_noite_sem_minday = as.integer(atvculturais_noite_sem_minday),
+    atvculturais_manha_fds_minday = as.integer(atvculturais_manha_fds_minday),
+    atvculturais_tarde_fds_minday = as.integer(atvculturais_tarde_fds_minday),
+    atvculturais_noite_fds_minday = as.integer(atvculturais_noite_fds_minday)
+  ) |>
+  mutate(
+    atvculturais_manha_sem_minday = if_else(is.na(atvculturais_manha_sem_minday), 0, atvculturais_manha_sem_minday),
+    atvculturais_tarde_sem_minday = if_else(is.na(atvculturais_tarde_sem_minday), 0, atvculturais_tarde_sem_minday),
+    atvculturais_noite_sem_minday = if_else(is.na(atvculturais_noite_sem_minday), 0, atvculturais_noite_sem_minday),
+    atvculturais_manha_fds_minday = if_else(is.na(atvculturais_manha_fds_minday), 0, atvculturais_manha_fds_minday),
+    atvculturais_tarde_fds_minday = if_else(is.na(atvculturais_tarde_fds_minday), 0, atvculturais_tarde_fds_minday),
+    atvculturais_noite_fds_minday = if_else(is.na(atvculturais_noite_fds_minday), 0, atvculturais_noite_fds_minday)
   ) |>
   mutate(
     total_atvculturais_sem_minday = atvculturais_manha_sem_minday + atvculturais_tarde_sem_minday + atvculturais_noite_sem_minday,
     total_atvculturais_minday_fds = atvculturais_manha_fds_minday + atvculturais_tarde_fds_minday + atvculturais_noite_fds_minday
   ) |>
   mutate(
-    total_atvculturais_minday = total_atvculturais_sem_minday + total_atvculturais_minday_fds
+    total_atvculturais_minday = (total_atvculturais_sem_minday * 5 + total_atvculturais_minday_fds * 2)/7
+  )
+
+# remove idade < 18
+df_ajustado <-
+  df_ajustado |>
+  filter(
+    idade > 17
   ) |>
-  select(-starts_with("sbq"))
+  mutate(
+    idade = if_else(idade > 100, mean(idade), idade),
+    idade = round(idade, 0)
+  )
+
+# arredondando os valores total de Atv e  SB em cada dominio
+df_ajustado <-
+  df_ajustado |>
+  mutate(
+    total_soneca_minday = round(total_soneca_minday, 0),
+    total_leitura_minday = round(total_leitura_minday, 0),
+    total_musica_minday = round(total_musica_minday, 0),
+    total_tv_minday = round(total_tv_minday, 0),
+    total_jogos_minday = round(total_jogos_minday, 0),
+    total_telefone_minday = round(total_telefone_minday, 0),
+    total_pc_minday = round(total_pc_minday, 0),
+    total_atvdomesticas_minday = round(total_atvdomesticas_minday, 0),
+    total_transporte_minday = round(total_transporte_minday, 0),
+    total_atvculturais_minday = round(total_atvculturais_minday, 0)
+  )
+
+# Parei aqui ----------------------------------------------------------------------------------
+write_rds(x = df_ajustado,file =  "df_para_analise.rds")
+df_ajustado <- readr::read_rds("df_para_analise.rds")
+glimpse(df_ajustado)
+
+
+# TODO ---------------------------------------------------------------------------------------
+# 1 - verificar se o calculo ta sendo feito certo [(weekday time * 5 + weekend day time * 2) / 7 ];
+# 2 - Tratar os valores extremos do SB;
+# 3 - calcular a soma do SB;
+# 4 - calcular SB mentalmente passivo e ativo
 
 
 # falta calcular SB mentalmente passivo e ativo
 
-glimpse(df_ajustado)
+df_ajustado |>
+  select(
+    starts_with("total_")
+  ) |> view()
+
+

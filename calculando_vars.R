@@ -727,24 +727,95 @@ df_ajustado <-
     total_atvculturais_minday = round(total_atvculturais_minday, 0)
   )
 
-# Parei aqui ----------------------------------------------------------------------------------
-write_rds(x = df_ajustado,file =  "df_para_analise.rds")
-df_ajustado <- readr::read_rds("df_para_analise.rds")
+# Calculo do total em SB;
+df_ajustado <-
+  df_ajustado |>
+  mutate(
+    total_sb =
+      total_soneca_minday +
+      total_leitura_minday +
+      total_musica_minday +
+      total_tv_minday +
+      total_jogos_minday +
+      total_telefone_minday +
+      total_pc_minday +
+      total_atvdomesticas_minday +
+      total_transporte_minday +
+      total_atvculturais_minday
+        ) |>
+  mutate(
+    total_sb_hday =  round(total_sb / 60, digits = 0)
+  ) |>
+  # excluir SB > 24h
+  filter(total_sb_hday < 24)
+
+# Calculando SB mentalmente ativo e passivo ---------------------------------------------------
+
+# Mentalmente passivo
+# It will be considered passive mentally sedentary behaviors:
+#   - nap activities [napping],
+#   - listening to music,
+#   - watching television,
+#   - talking using or not a smartphone when sited,
+#   - sit in car, bus or train,
+#   - going to church or the theater.
+df_ajustado <-
+  df_ajustado |>
+  mutate(
+    total_sb_mp =
+      total_soneca_minday + # napping
+      total_musica_minday + # listening to music
+      total_tv_minday + # watching television
+      total_telefone_minday + # talking using or not a smartphone when sited
+      total_transporte_minday + # sit in car, bus or train?
+      total_atvculturais_minday # going to church or the theater
+  ) |>
+  mutate(
+    total_sb_mp_hday =  round(total_sb / 60, digits = 0)
+  ) |>
+  # excluir SB > 24h
+  filter(total_sb_mp_hday < 24)
+
+
+# Mentalmente ativo
+# Active mentally sedentary behaviors will be considered:
+#   - reading,
+#   - use the computer,
+#   - administrative activities.
+df_ajustado <-
+  df_ajustado |>
+  mutate(
+    total_sb_ma =
+      total_leitura_minday + # reading
+      total_jogos_minday + # perform a hobby while being seated
+      total_pc_minday + # use the computer
+      total_atvdomesticas_minday # administrative activities
+
+  ) |>
+  mutate(
+    total_sb_ma =  round(total_sb / 60, digits = 0)
+  ) |>
+  # excluir SB > 24h
+  filter(total_sb_hday < 24)
+
+# remover variaveis do SB que não usaremos
+df_ajustado <-
+  df_ajustado |>
+  select(
+    -starts_with("soneca"),
+    -starts_with("leitura"),
+    -starts_with("musica"),
+    -starts_with("tv"),
+    -starts_with("jogos"),
+    -starts_with("telefone"),
+    -starts_with("pc"),
+    -starts_with("atvdomesticas"),
+    -starts_with("transporte"),
+    -starts_with("atvculturais")
+  )
+
+# Final df ------------------------------------------------------------------------------------
 glimpse(df_ajustado)
 
-
-# TODO ---------------------------------------------------------------------------------------
-# 1 - verificar se o calculo ta sendo feito certo [(weekday time * 5 + weekend day time * 2) / 7 ];
-# 2 - Tratar os valores extremos do SB;
-# 3 - calcular a soma do SB;
-# 4 - calcular SB mentalmente passivo e ativo
-
-
-# falta calcular SB mentalmente passivo e ativo
-
-df_ajustado |>
-  select(
-    starts_with("total_")
-  ) |> view()
-
-
+# Escrevendo novo df para analise ----------------------------------------------------------------------------------
+write_rds(x = df_ajustado,file =  "df_para_analise.rds")

@@ -172,9 +172,6 @@ df <-
                       renda == "Não relatou" ~ "Não relatou")
   )
 
-
-
-
 # tratamento de missing -----------------------------------------------------------------------
 # Verifricando os missing
 df |>
@@ -193,6 +190,18 @@ df <- complete(tempData,1)
 # Verifricando (novamente) os missing
 df |>
   plot_missing()
+
+# Verificando os dados novamente ---------------------------------------------------
+df[, 0:35] |>
+  select_if(is.numeric) |>
+  dfSummary() |>
+  stview()
+
+df[, 35:70] |>
+  select_if(is.numeric) |>
+  dfSummary() |>
+  stview()
+
 
 # Escrevendo novo df para analise ----------------------------------------------------------------------------------
 write_rds(x = df,file =  "df_para_analise.rds")

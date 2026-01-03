@@ -202,6 +202,10 @@ df[, 35:70] |>
   dfSummary() |>
   stview()
 
+# Filter implausible data for SB - > 16 h/day (JAMA, 2019) --------------------------------------
+df <-
+  df |>
+  filter(total_sb_hday <= 16)
 
 # Escrevendo novo df para analise ----------------------------------------------------------------------------------
 write_rds(x = df,file =  "df_para_analise.rds")

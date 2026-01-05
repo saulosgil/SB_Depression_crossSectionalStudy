@@ -771,11 +771,8 @@ df_ajustado <-
       total_atvculturais_minday # going to church or the theater
   ) |>
   mutate(
-    total_sb_mp_hday =  round(total_sb / 60, digits = 0)
-  ) |>
-  # excluir SB > 24h
-  filter(total_sb_mp_hday < 24)
-
+    total_sb_mp_hday =  round(total_sb_mp / 60, digits = 0)
+  )
 
 # Mentalmente ativo
 # Active mentally sedentary behaviors will be considered:
@@ -793,10 +790,8 @@ df_ajustado <-
 
   ) |>
   mutate(
-    total_sb_ma =  round(total_sb / 60, digits = 0)
-  ) |>
-  # excluir SB > 24h
-  filter(total_sb_hday < 24)
+    total_sb_ma_hday =  round(total_sb_ma / 60, digits = 0)
+  )
 
 # remover variaveis do SB que não usaremos
 df_ajustado <-

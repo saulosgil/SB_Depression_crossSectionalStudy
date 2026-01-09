@@ -32,6 +32,14 @@ library(logistf) # Para fazer Regressao logistica de Firth
 
 # O modelo continua o mesmo, mas os coeficientes β são estimados com correção de viés
 
+### Descrição para artigo
+
+# Penalized logistic regression using Firth’s method was employed to reduce bias and address issues of
+# complete separation, ensuring finite estimates of odds ratios and their corresponding 95% confidence
+# intervals.
+
+
+
 
 # Lendo a base para ajustes -------------------------------------------------------------------
 df <- readr::read_rds("df_para_analise.rds")

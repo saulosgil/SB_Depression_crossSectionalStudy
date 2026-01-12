@@ -2,6 +2,7 @@
 library(tidyverse)
 library(patchwork)
 library(rms)   # Para splines
+library(aod)
 
 # Lendo a base para ajustes -------------------------------------------------------------------
 df <- readr::read_rds("df_para_analise.rds")
@@ -89,6 +90,7 @@ model_rcs <- ols(
 )
 
 model_rcs
+anova(model_rcs)
 
 # Gerar intervalo de valores da variável de interesse
 ## funcao para pegar categoria mais frequente
@@ -176,6 +178,7 @@ model_rcs <- ols(
   )
 
 model_rcs
+anova(model_rcs)
 
 # Gerar intervalo de valores da variável de interesse
 new_data <- expand.grid(
@@ -247,6 +250,7 @@ model_rcs <- ols(
 )
 
 model_rcs
+anova(model_rcs)
 
 # Gerar intervalo de valores da variável de interesse
 new_data <- expand.grid(

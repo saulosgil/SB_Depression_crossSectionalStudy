@@ -216,7 +216,7 @@ ts_plot <-
   ) +
   labs(
     x = "",
-    y = "Timed up and go (seconds)"
+    y = "repetitions"
   ) +
   theme_classic()
 

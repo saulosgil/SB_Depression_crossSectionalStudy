@@ -38,9 +38,7 @@ df <-
                         renda == "2 ? 3 sal\xa0rios m\xa1nimos" ~ 2,
                         renda == "4 ? 5 sal\xa0rios m\xa1nimos" ~ 3,
                         renda == "Mais de 5 sal\xa0rios m\xa1nimos" ~ 4,
-                        renda == "N\xc6o relatou" ~ 5),
-      mvpa_minday = case_when(mvpa_minday < 150 ~ "inativo",
-                          mvpa_minday >= 150 ~ "ativo")
+                        renda == "N\xc6o relatou" ~ 5)
     )
 
 df <-
@@ -87,7 +85,7 @@ model_rcs <- ols(
     renda +                      # renda
     has +                        # hipertensão arterial sistêmica
     dm2 +                        # diabetes tipo 2
-    obesidade,                   # obesidade
+    obesidade +                   # obesidade
     mvpa_minday,
   data = df
 )
@@ -110,6 +108,7 @@ renda_mode    <- get_mode(df$renda)
 has_mode    <- get_mode(df$has)
 dm2_mode    <- get_mode(df$dm2)
 obesidade_mode    <- get_mode(df$obesidade)
+mvpa_minday_mode    <- get_mode(df$mvpa_minday)
 
 
 new_data <- expand.grid(
@@ -122,7 +121,8 @@ new_data <- expand.grid(
   renda = renda_mode,
   has = has_mode,
   dm2 = dm2_mode,
-  obesidade = obesidade_mode
+  obesidade = obesidade_mode,
+  mvpa_minday = mvpa_minday_mode
 )
 
 glimpse(new_data)
@@ -176,9 +176,8 @@ model_rcs <- ols(
       renda +                      # renda
       has +                        # hipertensão arterial sistêmica
       dm2 +                        # diabetes tipo 2
-      obesidade,
-    mvpa_minday,
-    # obesidade
+      obesidade +                  # obesidade
+      mvpa_minday,
     data = df
   )
 
@@ -196,7 +195,8 @@ new_data <- expand.grid(
   renda = renda_mode,
   has = has_mode,
   dm2 = dm2_mode,
-  obesidade = obesidade_mode
+  obesidade = obesidade_mode,
+  mvpa_minday = mvpa_minday_mode
 )
 
 glimpse(new_data)
@@ -250,9 +250,8 @@ model_rcs <- ols(
     renda +                      # renda
     has +                        # hipertensão arterial sistêmica
     dm2 +                        # diabetes tipo 2
-    obesidade,
-  mvpa_minday,
-  # obesidade
+    obesidade +                  # obesidade
+    mvpa_minday,
   data = df
 )
 
@@ -270,7 +269,8 @@ new_data <- expand.grid(
   renda = renda_mode,
   has = has_mode,
   dm2 = dm2_mode,
-  obesidade = obesidade_mode
+  obesidade = obesidade_mode,
+  mvpa_minday = mvpa_minday_mode
 )
 
 glimpse(new_data)

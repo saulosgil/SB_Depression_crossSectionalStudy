@@ -62,7 +62,11 @@ df2 <-
                       renda == "4 ? 5 sal\xa0rios m\xa1nimos" ~ "3",
                       renda == "Mais de 5 sal\xa0rios m\xa1nimos" ~ "4",
                       renda == "N\xc6o relatou" ~ "5")
-  )
+  ) |>
+  # filter oldet than 54
+  filter(idade > 54)
+
+glimpse(df2)
 
 # Dicotomizar Depressao (<20 and ≥20) e SB ------------------------------------------------------------------
 df2 <-
@@ -202,3 +206,4 @@ df2 |>
   group_by(total_masb_cat) |>
   count(dep_cat) |>
   mutate(percentual = round(n / sum(n) * 100, 1))
+

@@ -82,6 +82,8 @@ df2 <-
     total_masb_cat = as.factor(total_masb_cat)
   )
 
+df2$mvpa_minday <- df2$mvpa_minday / 60 # normalizar para 60 min/dia
+
 glimpse(df2)
 
 # Descriptive data and other metrics ----------------------------------------------------------

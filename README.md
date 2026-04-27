@@ -206,6 +206,3 @@ GitHub: [@saulosgil](https://github.com/saulosgil)
 
 ---
 
-## 🌟 Observação final
-
-Este repositório é uma base útil para análises epidemiológicas sobre **comportamento sedentário e depressão**, especialmente por combinar modelagem tradicional, regressão penalizada e abordagens flexíveis de não linearidade com splines. A estrutura sugere um projeto voltado à transparência analítica e à organização de diferentes estratégias de modelagem dentro de um mesmo estudo transversal.

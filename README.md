@@ -46,13 +46,12 @@ Com base nos arquivos do repositório, este projeto permite:
 ```text
 SB_Depression_crossSectionalStudy/
 ├── Hallgren_analises_AdjustedMvpa_continuos/
+├── Stubbs_analises_AdjustedMvpa_continuos_older54/
 ├── analises_AdjustedMvpa_categorical/
 ├── analises_AdjustedMvpa_continuos/
-├── analises_AdjustedMvpa_continuos_older54/
 ├── .gitignore
 ├── SB_Depression_crossSectionalStudy.Rproj
 ├── calculando_vars.R
-├── dados_acelerometro_rct.xlsx
 ├── data_prep.R
 ├── database_17122025.rds
 ├── df_para_CalcularVars.rds
@@ -62,9 +61,7 @@ SB_Depression_crossSectionalStudy/
 ├── linear_trend_mpsb.R
 ├── linear_trend_sb.R
 ├── logistic_reg.R
-├── partial_analises_rct.R
 ├── rcs_analysis.R
-├── splines_curves.jpeg
 └── tratamento_missing.R
 ```
 

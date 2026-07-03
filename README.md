@@ -1,49 +1,51 @@
+---
+
 # 🧠📉 SB_Depression_crossSectionalStudy
 
-Repositório com scripts em **R** para análise da associação entre **comportamento sedentário** e **sintomas depressivos** em um estudo transversal.
+Repository with **R** scripts for analyzing the association between **sedentary behavior** and **depressive symptoms** in a cross-sectional study.
 
-O projeto inclui rotinas para:
+The project includes routines for:
 
-- 📦 preparação dos dados;
-- 🧹 tratamento de dados faltantes;
-- 📊 análises de regressão logística;
-- 📈 análises de tendência linear;
-- 📉 modelagem com **restricted cubic splines (RCS)**;
-- 🧾 geração de bases analíticas intermediárias.
+- 📦 data preparation;
+- 🧹 handling of missing data;
+- 📊 logistic regression analyses;
+- 📈 linear trend analyses;
+- 📉 modeling with **restricted cubic splines (RCS)**;
+- 🧾 generation of intermediate analytical datasets.
 
-O repositório atualmente contém múltiplas pastas de análises, scripts principais em R, arquivos `.rds`, uma planilha `.xlsx`, uma imagem `.jpeg` e um arquivo de projeto do RStudio.
-
----
-
-## 📖 Sobre o projeto
-
-Este repositório organiza o fluxo analítico de um estudo transversal que investiga a relação entre:
-
-- **tempo sedentário total**;
-- **comportamento sedentário mentalmente passivo**;
-- **comportamento sedentário mentalmente ativo**;
-
-e **desfechos relacionados à depressão**.
-
-Pelos scripts disponíveis, a variável de depressão é trabalhada tanto como **escore contínuo** quanto como **desfecho categórico**, incluindo uma dicotomização do escore de depressão em `< 20` versus `≥ 20`. As exposições sedentárias também aparecem tanto de forma contínua quanto categorizadas em `< 4 h/day` versus `≥ 4 h/day`.
+The repository currently contains multiple analysis folders, main R scripts, `.rds` files, an `.xlsx` spreadsheet, a `.jpeg` image, and an RStudio project file.
 
 ---
 
-## 🎯 Objetivos analíticos
+## 📖 About the project
 
-Com base nos arquivos do repositório, este projeto permite:
+This repository organizes the analytical workflow of a cross-sectional study investigating the relationship between:
 
-- avaliar a associação entre **sedentary behavior (SB)** e depressão;
-- separar as análises por **mentally passive sedentary behavior (MPSB)** e **mentally active sedentary behavior (MASB)**;
-- testar associações lineares e não lineares;
-- ajustar os modelos para variáveis sociodemográficas e clínicas;
-- explorar análises adicionais com subgrupos e versões alternativas dos modelos.
+- **total sedentary time**;
+- **mentally passive sedentary behavior**;
+- **mentally active sedentary behavior**;
+
+and **depression-related outcomes**.
+
+Based on the available scripts, the depression variable is handled both as a **continuous score** and as a **categorical outcome**, including a dichotomization of the depression score into `< 20` versus `≥ 20`. The sedentary exposures also appear both continuously and categorized as `< 4 h/day` versus `≥ 4 h/day`.
 
 ---
 
-## 🗂️ Estrutura do repositório
+## 🎯 Analytical objectives
 
-```text
+Based on the repository's files, this project allows:
+
+- assessing the association between **sedentary behavior (SB)** and depression;
+- separating analyses by **mentally passive sedentary behavior (MPSB)** and **mentally active sedentary behavior (MASB)**;
+- testing linear and non-linear associations;
+- adjusting models for sociodemographic and clinical variables;
+- exploring additional analyses with subgroups and alternative model versions.
+
+---
+
+## 🗂️ Repository structure
+
+```
 SB_Depression_crossSectionalStudy/
 ├── Hallgren_analises_AdjustedMvpa_continuos/
 ├── Stubbs_analises_AdjustedMvpa_continuos_older54/
@@ -65,79 +67,90 @@ SB_Depression_crossSectionalStudy/
 └── tratamento_missing.R
 ```
 
-O repositório contém quatro diretórios principais de análise, além de scripts voltados à preparação, modelagem e exploração analítica.
+The repository contains four main analysis directories, in addition to scripts for data preparation, modeling, and exploratory analysis.
 
 ---
 
-## 📁 Principais arquivos
+## 📁 Main files
 
 ### `data_prep.R`
-Script de preparação da base de dados. O nome do arquivo indica que ele concentra o fluxo inicial de organização dos dados para análise.
+
+Data preparation script. The file name indicates it centralizes the initial data organization workflow for analysis.
 
 ### `tratamento_missing.R`
-Script voltado ao tratamento de dados faltantes, etapa importante para a construção da base analítica final.
+
+Script dedicated to handling missing data, an important step in building the final analytical dataset.
 
 ### `calculando_vars.R`
-Script destinado ao cálculo e derivação de variáveis analíticas a partir das bases intermediárias.
+
+Script for calculating and deriving analytical variables from the intermediate datasets.
 
 ### `logistic_reg.R`
-Implementa **regressão logística penalizada de Firth**, descrita no próprio script como uma estratégia para reduzir viés, lidar com separação completa ou quase completa e garantir estimativas finitas de odds ratios e IC95%. O script ajusta modelos para SB total, MPSB e MASB, com ajuste para idade, gênero, raça, renda, hipertensão, diabetes tipo 2 e obesidade.
+
+Implements **Firth's penalized logistic regression**, described in the script itself as a strategy to reduce bias, handle complete or quasi-complete separation, and ensure finite estimates of odds ratios and 95% CIs. The script fits models for total SB, MPSB, and MASB, adjusting for age, gender, race, income, hypertension, type 2 diabetes, and obesity.
 
 ### `rcs_analysis.R`
-Implementa modelos com **restricted cubic splines (3 nós)** para examinar associações não lineares entre comportamento sedentário e escore de depressão. O script informa explicitamente o uso de nós nos percentis **10, 50 e 90**, com ajuste para idade, sexo, raça/etnia, renda, hipertensão, diabetes tipo 2, obesidade e MVPA.
+
+Implements models with **restricted cubic splines (3 knots)** to examine non-linear associations between sedentary behavior and depression score. The script explicitly uses knots at the **10th, 50th, and 90th percentiles**, adjusting for age, sex, race/ethnicity, income, hypertension, type 2 diabetes, obesity, and MVPA.
 
 ### `linear_trend_sb.R`, `linear_trend_mpsb.R`, `linear_trend_masb.R`
-Scripts destinados à avaliação de tendência linear para comportamento sedentário total, mentalmente passivo e mentalmente ativo.
+
+Scripts for assessing the linear trend for total, mentally passive, and mentally active sedentary behavior.
 
 ### `splines_curves.jpeg`
-Arquivo de imagem associado às curvas de spline geradas nas análises.
+
+Image file associated with the spline curves generated in the analyses.
 
 ---
 
-## 🧪 Variáveis analíticas centrais
+## 🧪 Core analytical variables
 
-Pelos scripts públicos, o projeto trabalha com as seguintes variáveis principais:
+Based on the public scripts, the project works with the following main variables:
 
-### Exposições
-- `total_sb_hday` → comportamento sedentário total em horas/dia;
-- `total_sb_mp_hday` → comportamento sedentário mentalmente passivo em horas/dia;
-- `total_sb_ma_hday` → comportamento sedentário mentalmente ativo em horas/dia.
+### Exposures
 
-### Desfecho
-- `depressao_score` → escore de depressão;
-- `dep_cat` → variável categórica derivada do escore de depressão (`< 20` vs `≥ 20`).
+- `total_sb_hday` → total sedentary behavior in hours/day;
+- `total_sb_mp_hday` → mentally passive sedentary behavior in hours/day;
+- `total_sb_ma_hday` → mentally active sedentary behavior in hours/day.
 
-### Covariáveis
-Os modelos usam ajuste para:
-- idade/categoria de idade;
-- gênero;
-- raça;
-- renda;
-- hipertensão arterial sistêmica (`has`);
-- diabetes tipo 2 (`dm2`);
-- obesidade;
-- MVPA em algumas análises.
+### Outcome
 
----
+- `depressao_score` → depression score;
+- `dep_cat` → categorical variable derived from the depression score (`< 20` vs `≥ 20`).
 
-## 📈 Estratégia estatística
+### Covariates
 
-Com base nos scripts disponíveis, o fluxo analítico inclui:
+Models are adjusted for:
 
-- regressão logística penalizada de **Firth** para desfechos binários;
-- cálculo de **odds ratios** e **intervalos de confiança de 95%**;
-- análise de associações não lineares com **restricted cubic splines**;
-- análises específicas para **SB total**, **MPSB** e **MASB**;
-- categorização de exposições sedentárias em `< 4 h/day` e `≥ 4 h/day`;
-- inclusão de covariáveis sociodemográficas e metabólicas/clínicas.
+- age/age category;
+- gender;
+- race;
+- income;
+- systemic arterial hypertension (`has`);
+- type 2 diabetes (`dm2`);
+- obesity;
+- MVPA, in some analyses.
 
 ---
 
-## 💻 Tecnologias utilizadas
+## 📈 Statistical strategy
+
+Based on the available scripts, the analytical workflow includes:
+
+- **Firth's** penalized logistic regression for binary outcomes;
+- calculation of **odds ratios** and **95% confidence intervals**;
+- analysis of non-linear associations using **restricted cubic splines**;
+- specific analyses for **total SB**, **MPSB**, and **MASB**;
+- categorization of sedentary exposures into `< 4 h/day` and `≥ 4 h/day`;
+- inclusion of sociodemographic and metabolic/clinical covariates.
+
+---
+
+## 💻 Technologies used
 
 - **R**
-- Projeto em **RStudio** com arquivo `.Rproj`
-- Pacotes explicitamente visíveis nos scripts:
+- RStudio project with a `.Rproj` file
+- Packages explicitly used in the scripts:
   - `tidyverse`
   - `patchwork`
   - `rms`
@@ -147,23 +160,23 @@ Com base nos scripts disponíveis, o fluxo analítico inclui:
 
 ---
 
-## ▶️ Como usar
+## ▶️ How to use
 
-### 1. Clone o repositório
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/saulosgil/SB_Depression_crossSectionalStudy.git
 ```
 
-### 2. Abra o projeto no RStudio
+### 2. Open the project in RStudio
 
 ```r
 SB_Depression_crossSectionalStudy.Rproj
 ```
 
-### 3. Execute o fluxo analítico
+### 3. Run the analytical workflow
 
-Uma ordem sugerida é:
+A suggested order is:
 
 ```r
 source("data_prep.R")
@@ -173,7 +186,7 @@ source("logistic_reg.R")
 source("rcs_analysis.R")
 ```
 
-As análises adicionais podem então ser executadas conforme o objetivo:
+Additional analyses can then be run depending on the objective:
 
 ```r
 source("linear_trend_sb.R")
@@ -183,23 +196,20 @@ source("linear_trend_masb.R")
 
 ---
 
-## 🔁 Reprodutibilidade
+## 🔁 Reproducibility
 
-Para manter a reprodutibilidade do projeto:
+To maintain the project's reproducibility:
 
-- ✅ preserve a estrutura atual de pastas e arquivos;
-- ✅ mantenha os arquivos `.rds` e `.xlsx` no diretório esperado;
-- ✅ execute os scripts a partir da raiz do projeto;
-- ✅ use o arquivo `.Rproj` para evitar problemas de caminho relativo.
+- ✅ preserve the current folder and file structure;
+- ✅ keep the `.rds` and `.xlsx` files in the expected directory;
+- ✅ run the scripts from the project root;
+- ✅ use the `.Rproj` file to avoid relative path issues.
 
-O repositório contém múltiplos objetos intermediários em `.rds`, o que sugere um fluxo em etapas, com preparação e análise separadas.
+The repository contains multiple intermediate `.rds` objects, suggesting a staged workflow, with preparation and analysis kept separate.
 
 ---
 
-## 👨‍💻 Autor
+## 👨‍💻 Author
 
-**Saulo Gil**  
+**Saulo Gil**
 GitHub: [@saulosgil](https://github.com/saulosgil)
-
----
-

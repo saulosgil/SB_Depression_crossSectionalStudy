@@ -1,5 +1,3 @@
----
-
 # 🧠📉 SB_Depression_crossSectionalStudy
 
 Repository with **R** scripts for analyzing the association between **sedentary behavior** and **depressive symptoms** in a cross-sectional study.
@@ -74,31 +72,24 @@ The repository contains four main analysis directories, in addition to scripts f
 ## 📁 Main files
 
 ### `data_prep.R`
-
 Data preparation script. The file name indicates it centralizes the initial data organization workflow for analysis.
 
 ### `tratamento_missing.R`
-
 Script dedicated to handling missing data, an important step in building the final analytical dataset.
 
 ### `calculando_vars.R`
-
 Script for calculating and deriving analytical variables from the intermediate datasets.
 
 ### `logistic_reg.R`
-
 Implements **Firth's penalized logistic regression**, described in the script itself as a strategy to reduce bias, handle complete or quasi-complete separation, and ensure finite estimates of odds ratios and 95% CIs. The script fits models for total SB, MPSB, and MASB, adjusting for age, gender, race, income, hypertension, type 2 diabetes, and obesity.
 
 ### `rcs_analysis.R`
-
 Implements models with **restricted cubic splines (3 knots)** to examine non-linear associations between sedentary behavior and depression score. The script explicitly uses knots at the **10th, 50th, and 90th percentiles**, adjusting for age, sex, race/ethnicity, income, hypertension, type 2 diabetes, obesity, and MVPA.
 
 ### `linear_trend_sb.R`, `linear_trend_mpsb.R`, `linear_trend_masb.R`
-
 Scripts for assessing the linear trend for total, mentally passive, and mentally active sedentary behavior.
 
 ### `splines_curves.jpeg`
-
 Image file associated with the spline curves generated in the analyses.
 
 ---
@@ -108,20 +99,16 @@ Image file associated with the spline curves generated in the analyses.
 Based on the public scripts, the project works with the following main variables:
 
 ### Exposures
-
 - `total_sb_hday` → total sedentary behavior in hours/day;
 - `total_sb_mp_hday` → mentally passive sedentary behavior in hours/day;
 - `total_sb_ma_hday` → mentally active sedentary behavior in hours/day.
 
 ### Outcome
-
 - `depressao_score` → depression score;
 - `dep_cat` → categorical variable derived from the depression score (`< 20` vs `≥ 20`).
 
 ### Covariates
-
 Models are adjusted for:
-
 - age/age category;
 - gender;
 - race;
